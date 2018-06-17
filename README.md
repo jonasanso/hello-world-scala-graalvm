@@ -1,5 +1,9 @@
 # Hello World in Scala using GraalVM native-image 
 
+This is just a fork of https://github.com/Viewtiful/hello-world-scala-graalvm 
+But using mill instead of sbt and manual commands
+
+
 ## Install GraalVM
 1. Three possibilities here:
 
@@ -19,58 +23,45 @@ Check that everything is correct with `echo $PATH`
 
 ## Create a fat JAR of the project
 
-We are using `sbt-assembly` to create a fat JAR for us.
-Description taken from the repository (https://github.com/sbt/sbt-assembly)
-> sbt-assembly is a sbt plugin originally ported from codahale's assembly-sbt, which I'm guessing was inspired by Maven's assembly plugin. The goal is simple: Create a fat JAR of your project with all of its dependencies.
+We are using `mill hello.native` to create a native executable for us.
 
-In order to create the fat JAR, since `sbt-assembly` is already present in our project, we just have to do `sbt assembly` at the root of our project
 
 You should see the following output:
 
 ```
-[info] Loading settings from assembly.sbt ...
-[info] Loading project definition from /path/to/project/hello-world-scala-graalvm/project
-[info] Loading settings from build.sbt ...
-[info] Set current project to hello-world-scala-graalvm (in build file:/path/to/project/hello-world-scala-graalvm/)
-[info] Compiling 1 Scala source to /path/to/project/hello-world-scala-graalvm/target/scala-2.12/classes ...
+[25/34] hello.compile 
+Compiling compiler interface...
+warning: there was one deprecation warning (since 2.11.0)
+warning: there were four deprecation warnings (since 2.12.0)
+warning: there were 5 deprecation warnings in total; re-run with -deprecation for details
+warning: there were three feature warnings; re-run with -feature for details
+four warnings found
+[info] Compiling 1 Scala source to /Users/jonas.depop/hacks/hello-world-scala-graalvm/out/hello/compile/dest/classes ...
 [info] Done compiling.
-[info] Including from cache: scala-library-2.12.5.jar
-[info] Checking every *.class/*.jar file's SHA-1.
-[info] Merging files...
-[warn] Merging 'META-INF/MANIFEST.MF' with strategy 'discard'
-[warn] Strategy 'discard' was applied to a file
-[info] SHA-1: b8098009dc6ad381e43c481d0fb23ebc68e66cda
-[info] Packaging /path/to/project/hello-world-scala-graalvm/target/scala-2.12/hello-world.jar ...
-[info] Done packaging.
-[success] Total time: 6 s, completed Apr 21, 2018 9:26:49 PM
+[34/34] hello.native 
+Build on Server(pid: 72100, port: 64514)
+   classlist:     226.91 ms
+       (cap):   1,059.60 ms
+       setup:   1,642.86 ms
+  (typeflow):   4,681.84 ms
+   (objects):   1,568.71 ms
+  (features):      38.31 ms
+    analysis:   6,410.00 ms
+    universe:     222.44 ms
+     (parse):   1,667.38 ms
+    (inline):     969.33 ms
+   (compile):  15,318.66 ms
+     compile:  18,354.98 ms
+       image:   1,655.14 ms
+       write:   1,337.20 ms
+     [total]:  29,883.95 ms
 ```
 
-We then simply use `native-image` binary from the GraalVM to create our native image `native-image -jar target/scala-2.12/hello-world.jar`
 
-You should see the following output:
-
-```
-Build on Server(pid: 45153, port: 26681)
-   classlist:   2,357.02 ms
-       (cap):   1,576.42 ms
-       setup:   2,278.55 ms
-  (typeflow):   3,084.05 ms
-   (objects):   2,302.57 ms
-  (features):      34.19 ms
-    analysis:   5,507.09 ms
-    universe:     271.12 ms
-     (parse):     787.74 ms
-    (inline):     562.75 ms
-   (compile):   5,289.08 ms
-     compile:   7,166.70 ms
-       image:   2,391.88 ms
-       write:   1,043.90 ms
-     [total]:  21,068.57 ms
-```
 
 ## Executing the native image
 
-A simple `./hello-world` will do the job :smile:
+A simple `./out/hello/native/dest/hello` will do the job :smile:
 
 Check the time it takes for the program to execute!
-`time ./hello-world`
+`time ./out/hello/native/dest/hello`
