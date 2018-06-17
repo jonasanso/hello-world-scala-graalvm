@@ -2,6 +2,9 @@
 
 This is just a fork of https://github.com/Viewtiful/hello-world-scala-graalvm 
 But using mill instead of sbt and manual commands
+If you do not know mill, it is a new java/scala build tool
+
+Check it out https://www.lihaoyi.com/mill/
 
 
 ## Install GraalVM
